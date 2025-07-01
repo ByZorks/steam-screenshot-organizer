@@ -1,4 +1,6 @@
 import os
+import time
+import requests
 
 class Steam:
     def __init__(self):
@@ -28,7 +30,35 @@ class Steam:
             for line in lines:
                 if line.find("InGameOverlayScreenshotSaveUncompressedPath") != -1:
                     path = line.split('"')[3]
-                    print(path)
+                    print(f"Found screenshot path: {path}")
                     return path.replace("\\\\", "\\")
 
             return "No screenshots path found in config file."
+
+    def get_game_name(self, app_id):
+        url = f"https://store.steampowered.com/api/appdetails?appids={app_id}"
+
+        try:
+            response = requests.get(url)
+
+            if response.status_code == 200:
+                data = response.json()
+                if str(app_id) in data and 'data' in data[str(app_id)]:
+                    game_name = data[str(app_id)]['data'].get('name', 'Unknown Game')
+                    unauthorized_char = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
+                    for char in unauthorized_char:
+                        game_name = game_name.replace(char, ' ')
+                    return game_name
+
+                else:
+                    return 'Game not found'
+            elif response.status_code == 429:
+                print(f"Rate limit exceeded")
+                time.sleep(1)
+                return self.get_game_name(app_id)
+            else:
+                print(f"Application ID {app_id} not found. Status code: {response.status_code}")
+                return 'Unknown Game - fetch failed'
+        except Exception as e:
+            print(f"An error occurred while fetching game name: {e}")
+            return 'Error fetching game name'
