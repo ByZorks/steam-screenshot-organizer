@@ -1,0 +1,34 @@
+import os
+
+class Steam:
+    def __init__(self):
+        self.id = -1
+
+    def get_user_id(self):
+        parent_directory = "C:\\Program Files (x86)\\Steam\\userdata"
+        directories = os.listdir(parent_directory)
+        for directory in directories:
+            if directory.isdigit():
+                self.id = int(directory)
+                print(f"Found user ID: {self.id}")
+                break
+        else:
+            raise ValueError("No valid user ID found in userdata directory.")
+
+    def get_screenshots_path(self):
+        if self.id == -1:
+            self.get_user_id()
+
+        config_path = f"C:\\Program Files (x86)\\Steam\\userdata\\{self.id}\\config\\localconfig.vdf"
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"Config file not found at {config_path}")
+
+        with open(config_path, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+            for line in lines:
+                if line.find("InGameOverlayScreenshotSaveUncompressedPath") != -1:
+                    path = line.split('"')[3]
+                    print(path)
+                    return path.replace("\\\\", "\\")
+
+            return "No screenshots path found in config file."

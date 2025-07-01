@@ -1,6 +1,5 @@
 from FileOrganizer import FileOrganizer
 
-
 def main():
     file_organiser = FileOrganizer()
     file_organiser.organize()

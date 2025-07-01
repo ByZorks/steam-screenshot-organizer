@@ -1,9 +1,11 @@
 import os
+import Steam
 
 class FileOrganizer:
 
     def __init__(self):
-        self.path = "D:\\Images\\Steam - Copy\\"
+        self.steam = Steam.Steam()
+        self.path = self.steam.get_screenshots_path()
         self.files = os.listdir(self.path)
         self.types = ['png', 'jpg', 'jpeg']
 
