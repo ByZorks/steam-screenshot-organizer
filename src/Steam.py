@@ -28,6 +28,11 @@ class Steam:
         with open(config_path, 'r', encoding='utf-8') as file:
             lines = file.readlines()
             for line in lines:
+                if line.find("InGameOverlayScreenshotSaveUncompressed") != -1:
+                    is_enabled = line.split('"')[3]
+                    if is_enabled == "0":
+                        print("In-game uncompressed screenshot saving is disabled, exiting program.")
+                        exit(2)
                 if line.find("InGameOverlayScreenshotSaveUncompressedPath") != -1:
                     path = line.split('"')[3]
                     print(f"Found screenshot path: {path}")
