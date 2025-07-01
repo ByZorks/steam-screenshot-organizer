@@ -10,6 +10,9 @@ class TestFileOrganizer(unittest.TestCase):
 
     def test_organize_files(self):
         initial_files = self.organizer.files.copy()
+        # Ensure that valid files are present before organizing
+        self.assertTrue(any(file.endswith(tuple(self.organizer.types)) for file in initial_files), "No valid files to organize.")
+
         self.organizer.organize()
         game_names = dict()
         # Check if the number of files remains the same

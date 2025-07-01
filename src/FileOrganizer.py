@@ -11,6 +11,10 @@ class FileOrganizer:
         self.types = ['png', 'jpg', 'jpeg']
 
     def organize(self):
+        if not any(file.endswith(tuple(self.types)) for file in self.files):
+            print("No PNG, JPG, or JPEG files found to organize.")
+            exit(1)
+
         for file in self.files:
             if file.endswith(tuple(self.types)):
                 folder_name = self.create_folders(file)
@@ -30,8 +34,6 @@ class FileOrganizer:
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
             print(f"Created folder: {game_name}")
-        else:
-            print(f"Folder {game_name} already exists, skipping creation.")
 
         return game_name
 
