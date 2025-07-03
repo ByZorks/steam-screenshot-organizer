@@ -10,15 +10,15 @@ script is useful for keeping your Steam screenshots organized and easily accessi
 - Automatically detect Steam's screenshot directory.
     - Users can specify a custom directory if needed.
 
-# Build Executable using PyInstaller
+## Build Executable using PyInstaller
 
-## Install PyInstaller
+### Install PyInstaller
 
 ```bash
 pip install -U pyinstaller
 ```
 
-## Build the Executable
+### Build the Executable
 
 ```bash
 pyinstaller .\Main.py --distpath "../dist" --name "Steam Screenshots Organizer" --workpath "../build" --specpath "../"
