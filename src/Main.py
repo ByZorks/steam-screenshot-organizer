@@ -1,6 +1,6 @@
 from FileOrganizer import FileOrganizer
 
-def main():
+def main() -> None:
     file_organiser = FileOrganizer()
     file_organiser.organize()
 

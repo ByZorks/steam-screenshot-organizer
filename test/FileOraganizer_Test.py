@@ -4,11 +4,11 @@ from FileOrganizer import FileOrganizer
 
 class TestFileOrganizer(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.organizer = FileOrganizer()
         self.number_of_files = len(self.organizer.files)
 
-    def test_organize_files(self):
+    def test_organize_files(self) -> None:
         initial_files = self.organizer.files.copy()
         # Ensure that valid files are present before organizing
         self.assertTrue(any(file.endswith(tuple(self.organizer.types)) for file in initial_files), "No valid files to organize.")
@@ -30,7 +30,7 @@ class TestFileOrganizer(unittest.TestCase):
             else:
                 self.assertFalse(os.path.exists(os.path.join(str(folder_path), str(file))), f"File {file} should not be in {game_name} folder.")
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         # Move the files back to the original directory for cleanup
         directories = os.listdir(self.organizer.path)
         for directory in directories:

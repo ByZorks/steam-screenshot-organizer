@@ -10,7 +10,7 @@ class FileOrganizer:
         self.games_ids = dict()
         self.types = ['png', 'jpg', 'jpeg']
 
-    def organize(self):
+    def organize(self) -> None:
         if not any(file.endswith(tuple(self.types)) for file in self.files):
             print("No PNG, JPG, or JPEG files found to organize.")
             exit(1)
@@ -22,10 +22,10 @@ class FileOrganizer:
             else:
                 print(f"Skipping file: {file} (not a PNG, JPG, or JPEG)")
 
-    def create_folders(self, file):
+    def create_folders(self, file : str) -> str:
         game_id = file.split('_')[0]
         if game_id not in self.games_ids:
-            game_name = self.steam.get_game_name(int(game_id))
+            game_name = self.steam.get_game_name(game_id)
             self.games_ids[game_id] = game_name
         else:
             game_name = self.games_ids[game_id]
@@ -37,7 +37,7 @@ class FileOrganizer:
 
         return game_name
 
-    def move_file(self, file, folder_name):
+    def move_file(self, file : str, folder_name : str) -> None:
         source = os.path.join(self.path, file)
         destination = os.path.join(self.path, folder_name, file)
         if not os.path.exists(destination):

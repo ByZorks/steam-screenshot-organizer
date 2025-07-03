@@ -42,9 +42,8 @@ class SteamManager:
 
         return True
 
-    def get_screenshots_path(self):
+    def get_screenshots_path(self) -> str:
         if self.id == -1:
-            # self.get_user_id()
             self.get_most_recent_user_id()
 
         config_path = f"C:\\Program Files (x86)\\Steam\\userdata\\{self.id}\\config\\localconfig.vdf"
@@ -66,7 +65,7 @@ class SteamManager:
 
             return "No screenshots path found in config file."
 
-    def get_game_name(self, app_id):
+    def get_game_name(self, app_id : str) -> str:
         url = f"https://store.steampowered.com/api/appdetails?appids={app_id}"
 
         try:
@@ -74,8 +73,8 @@ class SteamManager:
 
             if response.status_code == 200:
                 data = response.json()
-                if str(app_id) in data and 'data' in data[str(app_id)]:
-                    game_name = data[str(app_id)]['data'].get('name', 'Unknown Game')
+                if app_id in data and 'data' in data[str(app_id)]:
+                    game_name = data[app_id]['data'].get('name', 'Unknown Game')
                     unauthorized_char = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
                     for char in unauthorized_char:
                         game_name = game_name.replace(char, ' ')
@@ -84,7 +83,7 @@ class SteamManager:
                 else:
                     return 'Game not found'
             elif response.status_code == 429:
-                print(f"Rate limit exceeded")
+                print(f"Steam API Rate limit exceeded, retrying in 1 second...")
                 time.sleep(1)
                 return self.get_game_name(app_id)
             else:
