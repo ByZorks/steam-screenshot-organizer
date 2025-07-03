@@ -1,25 +1,51 @@
 import os
 import time
 import requests
+import vdf
 
-class Steam:
+class SteamManager:
     def __init__(self):
         self.id = -1
 
-    def get_user_id(self):
-        parent_directory = "C:\\Program Files (x86)\\Steam\\userdata"
-        directories = os.listdir(parent_directory)
-        for directory in directories:
-            if directory.isdigit():
-                self.id = int(directory)
-                print(f"Found user ID: {self.id}")
-                break
+    def get_most_recent_user_id(self) -> None:
+        file = "C:\\Program Files (x86)\\Steam\\config\\loginusers.vdf"
+        if not os.path.exists(file):
+            raise FileNotFoundError(f"Login users file not found at {file}")
+
+        with open(file, 'r', encoding='utf-8') as f:
+            data = vdf.load(f)
+
+            users = data.get('users', {})
+
+            most_recent_user = None
+            for steam_id, info in users.items():
+                if info.get("MostRecent") == "1":
+                    most_recent_user = {
+                        "SteamID64": int(steam_id),
+                        "AccountName": info.get("AccountName"),
+                        "PersonaName": info.get("PersonaName"),
+                    }
+                    break
+
+        if most_recent_user and self.verify_user_id(self.get_account_id(most_recent_user["SteamID64"])):
+            account_id = self.get_account_id(int(most_recent_user["SteamID64"]))
+            print(f"Most recent user ID: {account_id} ({most_recent_user['PersonaName']})")
+            self.id = account_id
         else:
-            raise ValueError("No valid user ID found in userdata directory.")
+            raise ValueError("No most recent user found in loginusers.vdf file.")
+
+    def verify_user_id(self, steam_3_account_id : int) -> bool:
+        if not os.path.exists(f"C:\\Program Files (x86)\\Steam\\userdata\\{steam_3_account_id}"):
+            raise FileNotFoundError(f"User ID {steam_3_account_id} does not exist in userdata directory.")
+        else:
+            print(f"User ID {steam_3_account_id} verified successfully.")
+
+        return True
 
     def get_screenshots_path(self):
         if self.id == -1:
-            self.get_user_id()
+            # self.get_user_id()
+            self.get_most_recent_user_id()
 
         config_path = f"C:\\Program Files (x86)\\Steam\\userdata\\{self.id}\\config\\localconfig.vdf"
         if not os.path.exists(config_path):
@@ -67,3 +93,6 @@ class Steam:
         except Exception as e:
             print(f"An error occurred while fetching game name: {e}")
             return 'Error fetching game name'
+
+    def get_account_id(self, steamid64: int) -> int:
+        return steamid64 - 76561197960265728

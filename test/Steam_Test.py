@@ -1,16 +1,11 @@
 import unittest
 
-from Steam import Steam
+from SteamManager import SteamManager
 
 class TestSteam(unittest.TestCase):
 
     def setUp(self):
-        self.steam = Steam()
-
-    def test_get_user_id(self):
-        user_id_to_find = 123456789  # Replace with the actual user ID you expect
-        self.steam.get_user_id()
-        self.assertEqual(user_id_to_find, self.steam.id)
+        self.steam = SteamManager()
 
     def test_get_screenshots_path(self):
         screenshots_path_to_find = "D:\\Images\\Steam"

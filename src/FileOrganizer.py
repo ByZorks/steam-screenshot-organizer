@@ -1,10 +1,10 @@
 import os
-import Steam
+import SteamManager
 
 class FileOrganizer:
 
     def __init__(self):
-        self.steam = Steam.Steam()
+        self.steam = SteamManager.SteamManager()
         self.path = self.steam.get_screenshots_path()
         self.files = os.listdir(self.path)
         self.games_ids = dict()
