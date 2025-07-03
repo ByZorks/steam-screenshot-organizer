@@ -70,7 +70,7 @@ class SteamManager:
 
             if response.status_code == 200:
                 data = response.json()
-                if app_id in data and 'data' in data[str(app_id)]:
+                if app_id in data and 'data' in data[app_id]:
                     game_name = data[app_id]['data'].get('name', 'Unknown Game')
                     unauthorized_char = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
                     for char in unauthorized_char:

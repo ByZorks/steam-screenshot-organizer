@@ -10,19 +10,32 @@ class FileOrganizer:
         self.games_ids = dict()
         self.types = ['png', 'jpg', 'jpeg']
 
-    def run(self):
+    def run(self) -> None:
         print("\nWelcome to the Steam Screenshot Organizer!")
         print("This program will organize your screenshots into folders based on the game they belong to.")
         print("It will only organize PNG, JPG, and JPEG files.")
         print("If you have any other file types, they will remain untouched.\n")
 
-        print("Would you like to continue with user informations from above? (Y/N)\n")
+        print("Would you like to continue using the user information above? (Y/N): ")
         user_input = input()
         if user_input.lower() == 'y':
             self.organize()
-        else:
-            print("Exiting program.")
-            exit(0)
+        elif user_input.lower() == 'n':
+            print("Would you like to enter a custom path to your screenshots directory? (Y/N): ")
+            user_input = input()
+            if user_input.lower() == 'y':
+                print("Enter custom path to screenshots directory: ")
+                custom_screenshots_path = input()
+                if os.path.exists(custom_screenshots_path):
+                    self.path = custom_screenshots_path
+                    self.files = os.listdir(self.path)
+                    self.organize()
+                else:
+                    print("Invalid path provided, exiting program.")
+                    exit(1)
+            else:
+                print("Exiting program.")
+                exit(0)
 
     def organize(self) -> None:
         if not any(file.endswith(tuple(self.types)) for file in self.files):
@@ -32,12 +45,16 @@ class FileOrganizer:
         for file in self.files:
             if file.endswith(tuple(self.types)):
                 folder_name = self.create_folders(file)
-                self.move_file(file, folder_name)
+                if folder_name != "": self.move_file(file, folder_name)
             else:
                 print(f"Skipping file: {file} (not a PNG, JPG, or JPEG)")
 
     def create_folders(self, file : str) -> str:
         game_id = file.split('_')[0]
+        if not game_id.isdigit():
+            print(f"Skipping file {file} (does not start with a valid game ID)")
+            return ""
+
         if game_id not in self.games_ids:
             game_name = self.steam.get_game_name(game_id)
             self.games_ids[game_id] = game_name
