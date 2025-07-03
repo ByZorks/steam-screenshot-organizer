@@ -1,4 +1,6 @@
 import os
+import time
+
 import SteamManager
 
 class FileOrganizer:
@@ -20,6 +22,10 @@ class FileOrganizer:
         user_input = input()
         if user_input.lower() == 'y':
             self.organize()
+            print("\n\nOrganization complete! All screenshots have been organized into their respective game folders.")
+            print("Exiting program in 10 seconds...")
+            time.sleep(10)
+            exit(0)
         elif user_input.lower() == 'n':
             print("Would you like to enter a custom path to your screenshots directory? (Y/N): ")
             user_input = input()
@@ -30,16 +36,23 @@ class FileOrganizer:
                     self.path = custom_screenshots_path
                     self.files = os.listdir(self.path)
                     self.organize()
+                    print("\n\nOrganization complete! All screenshots have been organized into their respective game folders.")
+                    print("Exiting program in 10 seconds...")
+                    time.sleep(10)
+                    exit(0)
                 else:
-                    print("Invalid path provided, exiting program.")
-                    exit(1)
+                    print("Invalid path provided, exiting program in 10 seconds.")
+                    time.sleep(10)
+                    exit(2)
             else:
-                print("Exiting program.")
+                print("Exiting program in 10 seconds...")
+                time.sleep(10)
                 exit(0)
 
     def organize(self) -> None:
         if not any(file.endswith(tuple(self.types)) for file in self.files):
-            print("No PNG, JPG, or JPEG files found to organize.")
+            print("No PNG, JPG, or JPEG files found to organize. Exiting program in 10 seconds.")
+            time.sleep(10)
             exit(1)
 
         for file in self.files:

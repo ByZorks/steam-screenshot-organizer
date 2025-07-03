@@ -53,8 +53,9 @@ class SteamManager:
                 if line.find("InGameOverlayScreenshotSaveUncompressed") != -1:
                     is_enabled = line.split('"')[3]
                     if is_enabled == "0":
-                        print("In-game uncompressed screenshot saving is disabled, exiting program.")
-                        exit(2)
+                        print("In-game uncompressed screenshot saving is disabled, exiting program in 10 seconds.")
+                        time.sleep(10)
+                        exit(3)
                 if line.find("InGameOverlayScreenshotSaveUncompressedPath") != -1:
                     path = line.split('"')[3].replace("\\\\", "\\")
                     print(f"Found screenshot path: {path}")
