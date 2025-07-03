@@ -22,7 +22,6 @@ class SteamManager:
                 if info.get("MostRecent") == "1":
                     most_recent_user = {
                         "SteamID64": int(steam_id),
-                        "AccountName": info.get("AccountName"),
                         "PersonaName": info.get("PersonaName"),
                     }
                     break
@@ -37,8 +36,6 @@ class SteamManager:
     def verify_user_id(self, steam_3_account_id : int) -> bool:
         if not os.path.exists(f"C:\\Program Files (x86)\\Steam\\userdata\\{steam_3_account_id}"):
             raise FileNotFoundError(f"User ID {steam_3_account_id} does not exist in userdata directory.")
-        else:
-            print(f"User ID {steam_3_account_id} verified successfully.")
 
         return True
 
@@ -59,9 +56,9 @@ class SteamManager:
                         print("In-game uncompressed screenshot saving is disabled, exiting program.")
                         exit(2)
                 if line.find("InGameOverlayScreenshotSaveUncompressedPath") != -1:
-                    path = line.split('"')[3]
+                    path = line.split('"')[3].replace("\\\\", "\\")
                     print(f"Found screenshot path: {path}")
-                    return path.replace("\\\\", "\\")
+                    return path
 
             return "No screenshots path found in config file."
 

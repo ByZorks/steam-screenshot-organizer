@@ -10,6 +10,20 @@ class FileOrganizer:
         self.games_ids = dict()
         self.types = ['png', 'jpg', 'jpeg']
 
+    def run(self):
+        print("\nWelcome to the Steam Screenshot Organizer!")
+        print("This program will organize your screenshots into folders based on the game they belong to.")
+        print("It will only organize PNG, JPG, and JPEG files.")
+        print("If you have any other file types, they will remain untouched.\n")
+
+        print("Would you like to continue with user informations from above? (Y/N)\n")
+        user_input = input()
+        if user_input.lower() == 'y':
+            self.organize()
+        else:
+            print("Exiting program.")
+            exit(0)
+
     def organize(self) -> None:
         if not any(file.endswith(tuple(self.types)) for file in self.files):
             print("No PNG, JPG, or JPEG files found to organize.")
