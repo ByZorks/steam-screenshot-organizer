@@ -40,3 +40,8 @@ pyinstaller .\src\Main.py --distpath "./dist" --name "Steam Screenshots Organize
 ## License
 
 This project is licensed under GNU General Public License v3.0. See the [LICENSE](COPYING) file for details.
+
+## Third-Party licenses
+
+- [vdf](third_party_licenses/vdf/LICENSE): A Python library for parsing Valve Data Format (VDF) files.
+- [requests](third_party_licenses/requests/LICENSE): A simple, yet elegant HTTP library for Python.
