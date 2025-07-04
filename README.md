@@ -34,7 +34,7 @@ pip install -U pyinstaller
 ### Build the Executable
 
 ```bash
-pyinstaller .\Main.py --distpath "../dist" --name "Steam Screenshots Organizer" --workpath "../build" --specpath "../"
+pyinstaller .\src\Main.py --distpath "./dist" --name "Steam Screenshots Organizer" --workpath "./build" --specpath "./"
 ```
 
 ## License
