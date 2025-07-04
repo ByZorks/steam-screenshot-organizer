@@ -3,12 +3,15 @@ import os
 from FileOrganizer import FileOrganizer
 
 class TestFileOrganizer(unittest.TestCase):
+    """Unit tests for the FileOrganizer class."""
 
     def setUp(self) -> None:
+        """Set up the test environment by initializing the FileOrganizer."""
         self.organizer = FileOrganizer()
         self.number_of_files = len(self.organizer.files)
 
     def test_organize_files(self) -> None:
+        """Test the organization of files into game-specific folders."""
         initial_files = self.organizer.files.copy()
         # Ensure that valid files are present before organizing
         self.assertTrue(any(file.endswith(tuple(self.organizer.types)) for file in initial_files), "No valid files to organize.")
@@ -31,12 +34,15 @@ class TestFileOrganizer(unittest.TestCase):
                 self.assertFalse(os.path.exists(os.path.join(str(folder_path), str(file))), f"File {file} should not be in {game_name} folder.")
 
     def tearDown(self) -> None:
-        # Move the files back to the original directory for cleanup
-        directories = os.listdir(self.organizer.path)
-        for directory in directories:
-            dir_path = os.path.join(self.organizer.path, directory)
-            if os.path.isdir(dir_path):
-                files_in_dir = os.listdir(dir_path)
-                for file in files_in_dir:
-                    os.rename(os.path.join(dir_path, file), os.path.join(self.organizer.path, file))
-                os.rmdir(dir_path)
+        """Clean up the test environment by moving files back to the original directory."""
+        try:
+            directories = os.listdir(self.organizer.path)
+            for directory in directories:
+                dir_path = os.path.join(self.organizer.path, directory)
+                if os.path.isdir(dir_path):
+                    files_in_dir = os.listdir(dir_path)
+                    for file in files_in_dir:
+                        os.rename(os.path.join(dir_path, file), os.path.join(self.organizer.path, file))
+                    os.rmdir(dir_path)
+        except Exception as e:
+            print(f"Error during cleanup: {e}")

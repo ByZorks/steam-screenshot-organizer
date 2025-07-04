@@ -2,21 +2,26 @@ import os
 import time
 import requests
 import vdf
+from requests import RequestException
+
 
 class SteamManager:
-    def __init__(self):
+    """Class to manage Steam user data and screenshots."""
+
+    id: int
+
+    def __init__(self) -> None:
         self.id = -1
 
     def get_most_recent_user_id(self) -> None:
+        """Retrieves the most recent Steam user ID from the loginusers.vdf file."""
         file = "C:\\Program Files (x86)\\Steam\\config\\loginusers.vdf"
         if not os.path.exists(file):
             raise FileNotFoundError(f"Login users file not found at {file}")
 
         with open(file, 'r', encoding='utf-8') as f:
             data = vdf.load(f)
-
             users = data.get('users', {})
-
             most_recent_user = None
             for steam_id, info in users.items():
                 if info.get("MostRecent") == "1":
@@ -33,13 +38,15 @@ class SteamManager:
         else:
             raise ValueError("No most recent user found in loginusers.vdf file.")
 
-    def verify_user_id(self, steam_3_account_id : int) -> bool:
+    def verify_user_id(self, steam_3_account_id: int) -> bool:
+        """Verifies if the user ID exists in the Steam userdata directory."""
         if not os.path.exists(f"C:\\Program Files (x86)\\Steam\\userdata\\{steam_3_account_id}"):
             raise FileNotFoundError(f"User ID {steam_3_account_id} does not exist in userdata directory.")
 
         return True
 
     def get_screenshots_path(self) -> str:
+        """Retrieves the path for uncompressed in-game screenshots from the localconfig.vdf file."""
         if self.id == -1:
             self.get_most_recent_user_id()
 
@@ -53,9 +60,7 @@ class SteamManager:
                 if line.find("InGameOverlayScreenshotSaveUncompressed") != -1:
                     is_enabled = line.split('"')[3]
                     if is_enabled == "0":
-                        print("In-game uncompressed screenshot saving is disabled, exiting program in 10 seconds.")
-                        time.sleep(10)
-                        exit(3)
+                        raise ValueError("In-game uncompressed screenshot saving is disabled.")
                 if line.find("InGameOverlayScreenshotSaveUncompressedPath") != -1:
                     path = line.split('"')[3].replace("\\\\", "\\")
                     print(f"Found screenshot path: {path}")
@@ -63,7 +68,8 @@ class SteamManager:
 
             return "No screenshots path found in config file."
 
-    def get_game_name(self, app_id : str) -> str:
+    def get_game_name(self, app_id: str) -> str:
+        """Fetches the game name from the Steam API using the provided application ID."""
         url = f"https://store.steampowered.com/api/appdetails?appids={app_id}"
 
         try:
@@ -87,9 +93,10 @@ class SteamManager:
             else:
                 print(f"Application ID {app_id} not found. Status code: {response.status_code}")
                 return 'Unknown Game - fetch failed'
-        except Exception as e:
+        except RequestException as e:
             print(f"An error occurred while fetching game name: {e}")
             return 'Error fetching game name'
 
     def get_account_id(self, steamid64: int) -> int:
+        """Converts a SteamID64 to a Steam3 account ID."""
         return steamid64 - 76561197960265728
