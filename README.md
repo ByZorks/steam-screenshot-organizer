@@ -8,6 +8,7 @@ script is useful for keeping your Steam screenshots organized and easily accessi
 
 - Automatically organize Steam screenshots into game-specific folders.
 - Automatically detect Steam's screenshot directory.
+    - It uses the last connected Steam account to find the screenshot directory.
     - Users can specify a custom directory if needed.
 
 ## How to Use with Python
